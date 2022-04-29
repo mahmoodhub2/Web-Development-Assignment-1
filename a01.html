@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<!--
+    This script gets user's input(their name and thier maximum guess and thier guessing guess). 
+    It validates the user's input the it asks the user for a guess that's
+    between 1 and the range they've provided and if thier guess matches the
+    random number then the screen turn green and enables the user to start
+    again.
+-->
+
+<html>
+<head>
+    <title>Hi-Lo Game</title>
+    <script type="text/javascript">
+
+
+
+        // ------------------------------------------------------------
+        // Function: validateInput
+        // Description: it takes the name input from the user and validates it to make sure that it matches the letters and numbers
+        // if it does not then it shows an error message in the case if the inout was empty (then a message indicates that the input shouldn't be empty)
+        // or if it does not match the criteria (then a message says that indicates what the text should be made of). in case if the name matches then
+        // it hides the previus section and displays a new one.
+        // Parameters: none
+        // Returns: none     
+        // ------------------------------------------------------------
+        /*
+        * TITLE : validateInput
+        * AUTHOR : Sean Clarke
+        * DATE : 2021-09-22
+        * VERSION : 
+        * AVAILABIILTY : https://conestoga.desire2learn.com/d2l/le/content/483723/viewContent/9857001/View
+        */
+        function validateInput() {
+            var nameLength;
+            var whichName = document.getElementById("userName").value;
+            var nameValid;
+
+            nameLength = (whichName.trim()).length;
+            if (nameLength == 0) {
+                // error message / feedback
+                document.getElementById("nameError").innerHTML = "Your name <b>cannot</b> be BLANK.";
+            }
+            else {
+                // setup the regex for alpha characters and spaces
+                var lettersNSpaces = /^[A-Za-z\s]+$/;
+                var nums = "^[0-9]+$";
+                if (whichName.match(lettersNSpaces) || whichName.match(nums)) {
+                    nameValid = true;
+                }
+                else {
+                    document.getElementById("nameError").innerHTML = "Your name must not be blank or invalid";
+                }
+            }
+
+            if (((nameValid == true) && (nameLength > 0))) {
+                document.getElementById("section1").style.display = "none";	// hide the div
+                document.getElementById("section2").style.display = "block"; // show the div
+                document.getElementById("putName").innerHTML = "Welcome " + whichName + "<br> What is the maximum guess value?"; // nest a message into the div
+
+            }
+
+        }
+
+
+
+        // ------------------------------------------------------------
+        // Function: validateGuessInput
+        // Description: it propmts the user for a number that indicates thier maximum guess, if the guess matches the criteria then it hides the previus 
+        // section and shows a new one. if it does not then it shows an error message
+        // Parameters: none 
+        // Returns: none
+        // ------------------------------------------------------------
+        function validateGuessInput() {
+            var whichName = document.getElementById("userName").value;
+            var guessValid;
+            var guessLength;
+            var maxGuess = document.getElementById("maxGuess").value;
+            var maxGuessInt = parseInt(maxGuess);
+            guessLength = (maxGuess.trim()).length;
+            if (guessLength == 0) {
+                document.getElementById("guessError").innerHTML = "Your guess must not be blank";
+            }
+            else {
+                // setup the regex for alpha postive numbers only
+                var regex = "^[0-9]+$";
+
+                if (maxGuess.match(regex) && maxGuessInt > 2) {
+                    guessValid = true;
+                }
+                else {
+                    // error message / feedback
+                    document.getElementById("guessError").innerHTML = "Your guess must not be other than a number that's more than 1";
+                }
+            }
+
+            if (guessValid == true) {
+                document.getElementById("section2").style.display = "none"; // hide the div
+                document.getElementById("putName2").innerHTML = whichName + " we are playing Hi-Lo!"; // nest a message into the div
+                document.getElementById("enterGuess").innerHTML =" Enter your guess"; // nest a message into the div
+                document.getElementById("section3").style.display = "block"; // show the div
+                document.getElementById("allowbleRange").innerHTML = " Your allowable guessing range is any value betwee 1 and " + maxGuess; // nest a message into the div
+
+
+            }
+        }
+
+
+        // ------------------------------------------------------------
+        // Function: guessOperator
+        // Description: it genrates a random number out of the maximum guess and if the user's guess matches the random number genrated then the
+        // background color turns green the previous div getes hidden and new one gets displayed and a message that conragulates the user. However,
+        // if the inputted number does not match the randomNum then a range of number gets deiplayed for the user to choose and guess again. If the
+        // number is out of range then a messages gets diplayed that indicates that.
+        // Parameters: none
+        // Returns: none
+        // ------------------------------------------------------------
+        function guessOperator() {
+            var maxGuess = document.getElementById("maxGuess").value;
+            var userGuess = document.getElementById("userGuess").value;
+            // pareses the userGuess string to an integer
+            var userGuessInt = parseInt(userGuess);
+            // pareses the userGuess string to an integer
+            var maxGuessInt = parseInt(maxGuess);
+            // genrates a random number out of the maximum guess
+            var randomNum = Math.floor(Math.random() * maxGuess) + 1; 
+            var randomNumInt = parseInt(randomNum);
+            var regex = "^-?[0-9]+$";
+
+            if (userGuess.match(regex)) {
+
+                if (((userGuessInt < maxGuessInt) && (userGuessInt > 0)) || userGuessInt == randomNumInt) {
+                    if (randomNumInt > userGuessInt) {
+                        document.getElementById("allowbleRange").innerHTML = "Your allowable guessing range is any value between " + (userGuessInt + 1).toString() + " and " + maxGuess;
+                    }
+                    if (randomNumInt == userGuessInt) {
+                        document.getElementById("section3").style.display = "none";
+                        document.body.style.backgroundColor = "green";
+                        document.getElementById("section4").style.display = "block";
+
+                    }
+                }
+                else {
+                    document.getElementById("allowbleRange").innerHTML = "This number: " + userGuess + " is outised the allowable range. the range is between 1 and " + maxGuess;
+                }
+            }
+            else {
+                document.getElementById("allowbleRange").innerHTML = "You need to enter a number that's between 1 and " + maxGuess;
+            }
+
+        }
+
+
+
+        // ------------------------------------------------------------
+        // Function: starter
+        // Description: it turns the background-color to white and hides the prevoius section to dsiplay section2 that contains the maximum guess input
+        // Parameters: none
+        // Returns: none
+        // ------------------------------------------------------------
+        function starter() {
+            document.body.style.backgroundColor = "white";
+            document.getElementById("section4").style.display = "none";
+            document.getElementById("maxGuess").value = "";
+            document.getElementById("userGuess").value = "";
+            document.getElementById("section2").style.display = "block";
+        }
+
+
+
+    </script>
+</head>
+<body>
+    <div id="overallFeedback"></div>
+    <div id="section1">
+        <p>Let's play Hi-Lo</p>
+        <table id="inputTable">
+
+            <tr>
+                <td>What is your name?</td>
+                <td><input name="namePrompt" id="userName" type="text" /></td>
+                <td><div id="nameError" style="color:red;"></div></td>
+
+            </tr>
+            <tr>
+                <td colspan="3" align="center"><input id="checkInput" type="button" value="Submit" onclick="validateInput();" /></td>
+                <td>&nbsp;</td>
+            </tr>
+        </table>
+    </div>
+    <div id="section2" style="display:none">
+        <table id="inputTable2">
+            <tr>
+                <td id="putName"></td>
+                <td><input name="guessPrompt" id="maxGuess" type="text" /></td>
+                <td><div id="guessError" style="color:red;"></div></td>
+                <td><div></div></td>
+            </tr>
+            <tr>
+                <td colspan="3" align="center"><input id="checkInput" type="button" value="Submit" onclick="validateGuessInput();" /></td>
+                <td>&nbsp;</td>
+            </tr>
+        </table>
+    </div>
+    <div id="section3" style="display:none">
+        <p id="putName2"></p>
+        <table id="inputTable3">
+
+            <tr>
+                <td id="enterGuess"></td>
+                <td><input name="guessPrompt2" id="userGuess" type="text" /></td>
+                <td><div id="guessError2" style="color:red;"></div></td>
+                <td id="allowbleRange"></td>
+            </tr>
+            <tr>
+                <td colspan="3" align="center"><input id="checkInput2" type="button" value="Make this Guess" onclick="guessOperator();" /></td>
+                <td>&nbsp;</td>
+                <td id=""></td>
+            </tr>
+        </table>
+    </div>
+    <div id="section4" style="display:none">
+            <p>You Win!! You guessed the number!!</p>
+            <table>
+                <tr>
+                    <td colspan="3" align="center"><input id="playAgain" type="button" value="Play Again" onclick="starter();" /></td>
+                    <td>&nbsp;</td>
+                </tr>
+            </table>
+    </div>
+
+</body>
+</html>
